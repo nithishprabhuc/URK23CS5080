@@ -1,0 +1,114 @@
+package third;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+
+public class TurfBookingSystem {
+
+    // JDBC connection to MySQL
+    private static Connection connect() throws SQLException {
+        String url = "jdbc:mysql://localhost:3306/TurfBookingSystem";
+        String user = "root"; // replace with your MySQL username
+        String password = "nithish_np_007"; // replace with your MySQL password
+        return DriverManager.getConnection(url, user, password);
+    }
+
+    // Method to book turf
+    private static void bookTurf(String name, String date, String time, int duration) {
+        String query = "INSERT INTO Bookings (name, date, time, duration) VALUES (?, ?, ?, ?)";
+
+        try (Connection con = connect(); PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, name);
+            ps.setString(2, date);
+            ps.setString(3, time);
+            ps.setInt(4, duration);
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Turf booked successfully!");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+    }
+
+    // Method to view all bookings
+    private static void viewBookings() {
+        String query = "SELECT * FROM Bookings";
+
+        try (Connection con = connect(); Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+            StringBuilder bookings = new StringBuilder("Bookings:\n");
+            while (rs.next()) {
+                bookings.append("ID: ").append(rs.getInt("id"))
+                        .append(", Name: ").append(rs.getString("name"))
+                        .append(", Date: ").append(rs.getString("date"))
+                        .append(", Time: ").append(rs.getString("time"))
+                        .append(", Duration: ").append(rs.getInt("duration"))
+                        .append(" hours\n");
+            }
+            JOptionPane.showMessageDialog(null, bookings.toString());
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+    }
+
+    // Main method to run the application with Swing GUI
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Turf Booking System");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+        frame.setLayout(new GridLayout(6, 2));
+
+        // GUI Components
+        JLabel nameLabel = new JLabel("Name:");
+        JTextField nameField = new JTextField();
+        JLabel dateLabel = new JLabel("Date (YYYY-MM-DD):");
+        JTextField dateField = new JTextField();
+        JLabel timeLabel = new JLabel("Time (HH:MM:SS):");
+        JTextField timeField = new JTextField();
+        JLabel durationLabel = new JLabel("Duration (hours):");
+        JTextField durationField = new JTextField();
+        
+        JButton bookButton = new JButton("Book Turf");
+        JButton viewButton = new JButton("View Bookings");
+
+        // Add components to the frame
+        frame.add(nameLabel);
+        frame.add(nameField);
+        frame.add(dateLabel);
+        frame.add(dateField);
+        frame.add(timeLabel);
+        frame.add(timeField);
+        frame.add(durationLabel);
+        frame.add(durationField);
+        frame.add(bookButton);
+        frame.add(viewButton);
+
+        // Action listener for "Book Turf" button
+        bookButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameField.getText();
+                String date = dateField.getText();
+                String time = timeField.getText();
+                int duration;
+                try {
+                    duration = Integer.parseInt(durationField.getText());
+                    bookTurf(name, date, time, duration);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid duration.");
+                }
+            }
+        });
+
+        // Action listener for "View Bookings" button
+        viewButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewBookings();
+            }
+        });
+
+        // Display the frame
+        frame.setVisible(true);
+    }
+}
