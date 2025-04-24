@@ -1,0 +1,15 @@
+-- Create the database
+CREATE DATABASE TurfBookingSystem;
+
+-- Switch to the TurfBookingSystem database
+USE TurfBookingSystem;
+
+-- Create the Bookings table
+CREATE TABLE Bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Auto-incrementing ID for each booking
+    name VARCHAR(100),                  -- Name of the person booking the turf
+    date DATE,                          -- Date of the booking
+    time TIME,                          -- Time of the booking
+    duration INT                        -- Duration in hours for the booking
+);
+select * from Bookings;
