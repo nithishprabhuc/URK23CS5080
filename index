@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Turf Booking System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Turf Booking System</h1>
+
+    <form class="booking-form">
+      <label for="name">Name</label>
+      <input type="text" id="name" placeholder="Enter your name" required />
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" placeholder="Enter your phone number" required />
+
+      <label for="date">Select Date</label>
+      <input type="date" id="date" required />
+
+      <label for="time">Select Time</label>
+      <select id="time" required>
+        <option value="">-- Choose a slot --</option>
+        <option>6:00 AM - 7:00 AM</option>
+        <option>7:00 AM - 8:00 AM</option>
+        <option>8:00 AM - 9:00 AM</option>
+        <option>5:00 PM - 6:00 PM</option>
+        <option>6:00 PM - 7:00 PM</option>
+        <option>7:00 PM - 8:00 PM</option>
+      </select>
+
+      <button type="submit">Book Now</button>
+    </form>
+
+    <div id="result" class="result-message"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.querySelector(".booking-form");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault(); // Prevent form from refreshing the page
+
+        const name = document.getElementById("name").value;
+        const time = document.getElementById("time").value;
+        const resultDiv = document.getElementById("result");
+
+        if (name && time) {
+          resultDiv.textContent = `✅ Turf is booked for ${name} at ${time}`;
+          resultDiv.style.display = "block";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
